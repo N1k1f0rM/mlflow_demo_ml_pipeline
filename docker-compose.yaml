@@ -42,6 +42,22 @@ services:
       - minio
       - postgres
 
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    command: ["start-notebook.sh", "--NotebookApp.token='mytoken123'"]
+    ports:
+      - 8889:8888
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      JUPYTER_TOKEN: "mytoken123"
+      MLFLOW_TRACKING_URI: "http://mlflow:5000"
+      MLFLOW_S3_ENDPOINT_URL: "http://minio:9000"
+      AWS_ACCESS_KEY_ID: "minio-access-key"
+      AWS_SECRET_ACCESS_KEY: "minio-secret-key"
+    depends_on:
+      - mlflow
+
 volumes:
   minio_data:
   postgres_data:
